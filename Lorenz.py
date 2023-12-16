@@ -67,7 +67,7 @@ def makedirs(dirname):
 
 
 
-makedirs('Lorenz_results')
+makedirs(working_dir)
 import matplotlib.pyplot as plt
 
 
@@ -89,7 +89,7 @@ def visualize_3d(true_fU=None, pred_fU=None, size=(10, 10)):
             
     fig.canvas.draw()
     fig.canvas.flush_events()
-    plt.savefig('Lorenz_results/{:03d}'.format(itr), dpi=200, pad_inches=0.1)
+    plt.savefig(str(working_dir) + '/{:03d}'.format(itr), dpi=200, pad_inches=0.1)
 
 class ODEFunc(nn.Module):
 

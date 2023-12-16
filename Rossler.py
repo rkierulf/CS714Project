@@ -187,7 +187,6 @@ if __name__ == '__main__':
     plt.clf()
     plt.plot(np.array(range(len(loss_arr))) * args.test_freq, loss_arr)
     plt.savefig(str(working_dir) + '/loss.png')
-    plt.show()
     prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
     prog_out.close()
     animator.make_gif(working_dir,scheme)

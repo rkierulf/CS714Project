@@ -199,7 +199,7 @@ if __name__ == '__main__':
     prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
     prog_out.close()
     images = []
-    for val in range(len(os.listdir('Spiral_results')) - 2):
-        images.append(imageio.v2.imread(str('Spiral_results') + '/{:003d}.png'.format(val)))
+    for val in range(len(os.listdir(working_dir)) - 2):
+        images.append(imageio.v2.imread(str(working_dir) + '/{:003d}.png'.format(val)))
         print(val)
-    imageio.mimsave(str(os.getcwd()) + '/' + str('Spiral_results') + '/training_ ' + str(scheme) + '.gif', images, format='GIF',fps=4)
+    imageio.mimsave(str(os.getcwd()) + '/' + str(working_dir) + '/training_ ' + str(scheme) + '.gif', images, format='GIF',fps=4)
