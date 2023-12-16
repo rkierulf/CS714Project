@@ -8,6 +8,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.nn import functional as F
 
+import animator
+
+working_dir = "Lorenz_results"
+
 parser = argparse.ArgumentParser('Spiral Example 2')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
 parser.add_argument('--data_size', type=int, default=1000)
@@ -26,7 +30,6 @@ else:
     from torchdiffeq import odeint
 
 device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
-
 true_u0 = torch.tensor([-8.0, 7.0, 27.0]).to(device)
 t = torch.linspace(0.0, 10.0, args.data_size).to(device)
 
@@ -63,9 +66,9 @@ def makedirs(dirname):
         os.makedirs(dirname)
 
 
-if args.viz:
-    makedirs('png')
-    import matplotlib.pyplot as plt
+
+makedirs('Lorenz_results')
+import matplotlib.pyplot as plt
 
 
 def visualize_3d(true_fU=None, pred_fU=None, size=(10, 10)):
@@ -73,21 +76,20 @@ def visualize_3d(true_fU=None, pred_fU=None, size=(10, 10)):
     fig = plt.figure(figsize=size)
     ax = fig.add_subplot(1, 1, 1, projection='3d')    
 
-    if args.viz:
-        if pred_fU != None:
-            z = pred_fU.cpu().numpy()
-            z = np.reshape(z, [-1, 3])
-            for i in range(len(z)):
-                ax.plot(z[i:i + 10, 0], z[i:i + 10, 1], z[i:i + 10, 2], color=plt.cm.jet(i / len(z) / 1.6))
+    if pred_fU != None:
+        z = pred_fU.cpu().numpy()
+        z = np.reshape(z, [-1, 3])
+        for i in range(len(z)):
+            ax.plot(z[i:i + 10, 0], z[i:i + 10, 1], z[i:i + 10, 2], color=plt.cm.jet(i / len(z) / 1.6))
                 
-        if true_fU != None:
-            z = true_fU.cpu().numpy()
-            z = np.reshape(z, [-1, 3])
-            ax.scatter(z[:, 0], z[:, 1], z[:, 2], marker='.', color='k', alpha=0.5, linewidths=0, s=45)
+    if true_fU != None:
+        z = true_fU.cpu().numpy()
+        z = np.reshape(z, [-1, 3])
+        ax.scatter(z[:, 0], z[:, 1], z[:, 2], marker='.', color='k', alpha=0.5, linewidths=0, s=45)
             
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-        plt.savefig('png/{:03d}'.format(itr), dpi=200, bbox_inches='tight', pad_inches=0.1)
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+    plt.savefig('Lorenz_results/{:03d}'.format(itr), dpi=200, pad_inches=0.1)
 
 class ODEFunc(nn.Module):
 
@@ -134,6 +136,11 @@ class RunningAverageMeter(object):
 
 
 if __name__ == '__main__':
+    scheme = 'rk4'
+    if (os.path.exists(str(working_dir) + "/output.txt")):
+        os.remove(str(working_dir) + "/output.txt")
+    prog_out = open(str(working_dir) + "/output.txt", "a")
+    prog_out.write("Operating with " + str(scheme) + "\n")
 
     ii = 0
 
@@ -144,24 +151,37 @@ if __name__ == '__main__':
 
     time_meter = RunningAverageMeter(0.97)
     loss_meter = RunningAverageMeter(0.97)
+    loss_arr = []
+    time_arr = []
 
     for itr in range(1, args.niters + 1):
+        start = time.time()
         optimizer.zero_grad()
         batch_u0, batch_t, batch_u = get_batch(true_fU)
-        pred_fU = odeint(func, batch_u0, batch_t, method='rk4').to(device)
+        pred_fU = odeint(func, batch_u0, batch_t, method=scheme).to(device)
         loss = F.mse_loss(pred_fU, batch_u)
         loss.backward()
         optimizer.step()
+        time_arr.append(time.time()-start)
 
         time_meter.update(time.time() - end)
         loss_meter.update(loss.item())
 
         if itr % args.test_freq == 0:
             with torch.no_grad():
-                pred_fU = odeint(func, true_fU[0], t, method='rk4')
+                pred_fU = odeint(func, true_fU[0], t, method=scheme)
                 loss = F.mse_loss(pred_fU, true_fU)
-                print('Iter {:04d} | Total Loss {:.6f}'.format(itr, loss.item()))
-                visualize_3d(true_fU, pred_fU)
+                loss_arr.append(loss.item())
+                prog_out.write('Iter {:04d} | Total Loss {:.6f}\n\n'.format(itr, loss.item()))
+                #visualize_3d(true_fU, pred_fU)
                 ii += 1
 
+
         end = time.time()
+    loss_arr = np.log(loss_arr)
+    plt.clf()
+    plt.plot(np.array(range(len(loss_arr)))*args.test_freq, loss_arr)
+    plt.savefig(str(working_dir) + '/loss.png')
+    prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
+    prog_out.close()
+    animator.make_gif(working_dir,scheme)

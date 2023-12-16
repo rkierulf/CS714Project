@@ -1,12 +1,16 @@
 import os
 import argparse
 import time
+
+import imageio
 import numpy as np
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.nn import functional as F
+
+working_dir = "Spiral_results"
 
 parser = argparse.ArgumentParser('Spiral Example 2')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
@@ -55,14 +59,14 @@ def makedirs(dirname):
         os.makedirs(dirname)
 
 
-if args.viz:
-    makedirs('png')
-    import matplotlib.pyplot as plt
+
+makedirs(working_dir)
+import matplotlib.pyplot as plt
 
 
 def visualize(true_y, pred_y, odefunc, itr):
 
-    if args.viz:
+    if True:
         fig = plt.figure(figsize=(12, 4), facecolor='white')
         ax_traj = fig.add_subplot(131, frameon=False)
         ax_phase = fig.add_subplot(132, frameon=False)
@@ -102,10 +106,10 @@ def visualize(true_y, pred_y, odefunc, itr):
         ax_vecfield.set_ylim(-2, 2)
 
         fig.tight_layout()
-        plt.savefig('png/{:03d}'.format(itr))
-        plt.draw()
-        plt.pause(0.001)
-        plt.show()
+        plt.savefig(str(working_dir) + '/{:03d}'.format(itr))
+        #plt.draw()
+        #plt.pause(0.001)
+        #plt.show()
 
 
 class ODEFunc(nn.Module):
@@ -143,6 +147,11 @@ class RunningAverageMeter(object):
 
 
 if __name__ == '__main__':
+    scheme = 'rk4'
+    if (os.path.exists(str(working_dir) + "/output.txt")):
+        os.remove(str(working_dir) + "/output.txt")
+    prog_out = open(str(working_dir) + "/output.txt", "a")
+    prog_out.write("Operating with " + str(scheme) + "\n")
 
     ii = 0
 
@@ -155,23 +164,42 @@ if __name__ == '__main__':
     
     loss_meter = RunningAverageMeter(0.97)
 
+    loss_arr = []
+    time_arr = []
+
     for itr in range(1, args.niters + 1):
+        start = time.time()
         optimizer.zero_grad()
         batch_y0, batch_t, batch_y = get_batch()
-        pred_y = odeint(func, batch_y0, batch_t).to(device)
+        pred_y = odeint(func, batch_y0, batch_t, method=scheme).to(device)
         loss = F.mse_loss(pred_y, batch_y)
         loss.backward()
         optimizer.step()
+        time_arr.append(time.time() - start)
 
         time_meter.update(time.time() - end)
         loss_meter.update(loss.item())
 
         if itr % args.test_freq == 0:
             with torch.no_grad():
-                pred_y = odeint(func, true_y0, t)
+                pred_y = odeint(func, true_y0, t, method=scheme)
                 loss = torch.mean(torch.abs(pred_y - true_y))
-                print('Iter {:04d} | Total Loss {:.6f}'.format(itr, loss.item()))
+                loss_arr.append(loss.item())
+                prog_out.write('Iter {:04d} | Total Loss {:.6f}\n\n'.format(itr, loss.item()))
                 visualize(true_y, pred_y, func, ii)
                 ii += 1
 
+
         end = time.time()
+    loss_arr = np.log(loss_arr)
+    plt.clf()
+    plt.figure(figsize=(5,5))
+    plt.plot(np.array(range(len(loss_arr))) * args.test_freq, loss_arr)
+    plt.savefig(str(working_dir) + '/loss.png')
+    prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
+    prog_out.close()
+    images = []
+    for val in range(len(os.listdir('Spiral_results')) - 2):
+        images.append(imageio.v2.imread(str('Spiral_results') + '/{:003d}.png'.format(val)))
+        print(val)
+    imageio.mimsave(str(os.getcwd()) + '/' + str('Spiral_results') + '/training_ ' + str(scheme) + '.gif', images, format='GIF',fps=4)
