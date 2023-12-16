@@ -1,0 +1,2 @@
+Operating with rk4
+Iter 0020 | Total Loss 206.550797Iter 0040 | Total Loss 2744765.750000
