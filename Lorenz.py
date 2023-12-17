@@ -10,9 +10,9 @@ from torch.nn import functional as F
 
 import animator
 
-working_dir = "Lorenz_results"
+working_dir = "Lorenz_results/adjoint_dopri5"
 
-parser = argparse.ArgumentParser('Spiral Example 2')
+parser = argparse.ArgumentParser('Lorenz System')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
 parser.add_argument('--data_size', type=int, default=1000)
 parser.add_argument('--batch_time', type=int, default=2)
@@ -24,7 +24,7 @@ parser.add_argument('--gpu', type=int, default=0)
 parser.add_argument('--adjoint', action='store_true')
 args = parser.parse_args()
 
-if args.adjoint:
+if True:
     from torchdiffeq import odeint_adjoint as odeint
 else:
     from torchdiffeq import odeint
@@ -136,7 +136,7 @@ class RunningAverageMeter(object):
 
 
 if __name__ == '__main__':
-    scheme = 'rk4'
+    scheme = 'dopri5'
     if (os.path.exists(str(working_dir) + "/output.txt")):
         os.remove(str(working_dir) + "/output.txt")
     prog_out = open(str(working_dir) + "/output.txt", "a")
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                 loss = F.mse_loss(pred_fU, true_fU)
                 loss_arr.append(loss.item())
                 prog_out.write('Iter {:04d} | Total Loss {:.6f}\n\n'.format(itr, loss.item()))
-                #visualize_3d(true_fU, pred_fU)
+                visualize_3d(true_fU, pred_fU)
                 ii += 1
 
 
@@ -181,6 +181,9 @@ if __name__ == '__main__':
     loss_arr = np.log(loss_arr)
     plt.clf()
     plt.plot(np.array(range(len(loss_arr)))*args.test_freq, loss_arr)
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("Loss During Training")
     plt.savefig(str(working_dir) + '/loss.png')
     prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
     prog_out.close()

@@ -11,10 +11,10 @@ from torch.nn import functional as F
 
 import animator
 
-parser = argparse.ArgumentParser('Spiral Example 2')
+parser = argparse.ArgumentParser('Rossler_results Attractor')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
 parser.add_argument('--data_size', type=int, default=1000)
-parser.add_argument('--batch_time', type=int, default=2)
+parser.add_argument('--batch_time', type=int, default=10)
 parser.add_argument('--batch_size', type=int, default=20)
 parser.add_argument('--niters', type=int, default=2000)
 parser.add_argument('--test_freq', type=int, default=20)
@@ -23,7 +23,7 @@ parser.add_argument('--gpu', type=int, default=0)
 parser.add_argument('--adjoint', action='store_true')
 args = parser.parse_args()
 
-working_dir = "Rossler_results"
+working_dir = "Rossler_results/Rossler_Euler_Adjoint"
 def makedirs(dirname):
     if not os.path.exists(dirname):
         os.makedirs(dirname)
@@ -31,7 +31,7 @@ def makedirs(dirname):
 makedirs(working_dir)
 import matplotlib.pyplot as plt
 
-if args.adjoint:
+if True:
     from torchdiffeq import odeint_adjoint as odeint
 else:
     from torchdiffeq import odeint
@@ -140,7 +140,7 @@ class RunningAverageMeter(object):
 if __name__ == '__main__':
 
     ii = 0
-    scheme = 'rk4'
+    scheme = 'euler'
     if (os.path.exists(str(working_dir) + "/output.txt")):
         os.remove(str(working_dir) + "/output.txt")
     prog_out = open(str(working_dir) + "/output.txt", "a")
@@ -186,6 +186,9 @@ if __name__ == '__main__':
     loss_arr = np.log(loss_arr)
     plt.clf()
     plt.plot(np.array(range(len(loss_arr))) * args.test_freq, loss_arr)
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("Loss During Training")
     plt.savefig(str(working_dir) + '/loss.png')
     prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
     prog_out.close()

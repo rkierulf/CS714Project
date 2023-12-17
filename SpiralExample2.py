@@ -10,9 +10,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.nn import functional as F
 
-working_dir = "Spiral_results"
+working_dir = "Spiral_results/Spiral_Euler_Adjoint"
 
-parser = argparse.ArgumentParser('Spiral Example 2')
+parser = argparse.ArgumentParser('Spiral_results Example 2')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
 parser.add_argument('--data_size', type=int, default=1000)
 parser.add_argument('--batch_time', type=int, default=2)
@@ -24,7 +24,7 @@ parser.add_argument('--gpu', type=int, default=0)
 parser.add_argument('--adjoint', action='store_true')
 args = parser.parse_args()
 
-if args.adjoint:
+if True:
     from torchdiffeq import odeint_adjoint as odeint
 else:
     from torchdiffeq import odeint
@@ -147,7 +147,7 @@ class RunningAverageMeter(object):
 
 
 if __name__ == '__main__':
-    scheme = 'rk4'
+    scheme = 'euler'
     if (os.path.exists(str(working_dir) + "/output.txt")):
         os.remove(str(working_dir) + "/output.txt")
     prog_out = open(str(working_dir) + "/output.txt", "a")
@@ -195,11 +195,13 @@ if __name__ == '__main__':
     plt.clf()
     plt.figure(figsize=(5,5))
     plt.plot(np.array(range(len(loss_arr))) * args.test_freq, loss_arr)
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("Loss During Training")
     plt.savefig(str(working_dir) + '/loss.png')
     prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
     prog_out.close()
     images = []
     for val in range(len(os.listdir(working_dir)) - 2):
         images.append(imageio.v2.imread(str(working_dir) + '/{:003d}.png'.format(val)))
-        print(val)
     imageio.mimsave(str(os.getcwd()) + '/' + str(working_dir) + '/training_ ' + str(scheme) + '.gif', images, format='GIF',fps=4)
