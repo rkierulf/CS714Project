@@ -1,0 +1,202 @@
+Operating with euler
+Iter 0020 | Total Loss 137.255798
+
+Iter 0040 | Total Loss 107.313004
+
+Iter 0060 | Total Loss 240.867264
+
+Iter 0080 | Total Loss 371.854950
+
+Iter 0100 | Total Loss 1038079680.000000
+
+Iter 0120 | Total Loss 5145.868164
+
+Iter 0140 | Total Loss 791.469849
+
+Iter 0160 | Total Loss 617.634766
+
+Iter 0180 | Total Loss 359.988800
+
+Iter 0200 | Total Loss 177.290253
+
+Iter 0220 | Total Loss 286.600647
+
+Iter 0240 | Total Loss 176.634415
+
+Iter 0260 | Total Loss 155.358047
+
+Iter 0280 | Total Loss 175.637650
+
+Iter 0300 | Total Loss 152.862930
+
+Iter 0320 | Total Loss 137.038177
+
+Iter 0340 | Total Loss 175.443039
+
+Iter 0360 | Total Loss 153.399872
+
+Iter 0380 | Total Loss 148.095566
+
+Iter 0400 | Total Loss 122.097321
+
+Iter 0420 | Total Loss 149.380478
+
+Iter 0440 | Total Loss 93.595482
+
+Iter 0460 | Total Loss 115.941254
+
+Iter 0480 | Total Loss 155.663071
+
+Iter 0500 | Total Loss 159.156555
+
+Iter 0520 | Total Loss 159.964203
+
+Iter 0540 | Total Loss 481.704498
+
+Iter 0560 | Total Loss 110.636330
+
+Iter 0580 | Total Loss 85.347748
+
+Iter 0600 | Total Loss 139.729538
+
+Iter 0620 | Total Loss 141.271088
+
+Iter 0640 | Total Loss 137.441956
+
+Iter 0660 | Total Loss 138.691284
+
+Iter 0680 | Total Loss 125.931259
+
+Iter 0700 | Total Loss 184.310883
+
+Iter 0720 | Total Loss 145.665878
+
+Iter 0740 | Total Loss 206.367935
+
+Iter 0760 | Total Loss 145.874680
+
+Iter 0780 | Total Loss 227.558151
+
+Iter 0800 | Total Loss 104.180893
+
+Iter 0820 | Total Loss 91.332542
+
+Iter 0840 | Total Loss 153.153198
+
+Iter 0860 | Total Loss 153.673843
+
+Iter 0880 | Total Loss 196.937317
+
+Iter 0900 | Total Loss 183.362000
+
+Iter 0920 | Total Loss 157.328827
+
+Iter 0940 | Total Loss 164.544998
+
+Iter 0960 | Total Loss 190.656662
+
+Iter 0980 | Total Loss 295.291321
+
+Iter 1000 | Total Loss 168.353897
+
+Iter 1020 | Total Loss 152.982819
+
+Iter 1040 | Total Loss 104.102814
+
+Iter 1060 | Total Loss 128.873337
+
+Iter 1080 | Total Loss 102.167122
+
+Iter 1100 | Total Loss 120.224480
+
+Iter 1120 | Total Loss 137.646545
+
+Iter 1140 | Total Loss 119.161362
+
+Iter 1160 | Total Loss 158.874146
+
+Iter 1180 | Total Loss 364.158051
+
+Iter 1200 | Total Loss 145.328491
+
+Iter 1220 | Total Loss 129.222092
+
+Iter 1240 | Total Loss 110.966431
+
+Iter 1260 | Total Loss 134.654022
+
+Iter 1280 | Total Loss 156.790482
+
+Iter 1300 | Total Loss 215.904434
+
+Iter 1320 | Total Loss 147.301453
+
+Iter 1340 | Total Loss 27375.328125
+
+Iter 1360 | Total Loss 25714.068359
+
+Iter 1380 | Total Loss 2410.344238
+
+Iter 1400 | Total Loss 167.875732
+
+Iter 1420 | Total Loss 108.774490
+
+Iter 1440 | Total Loss 164.158188
+
+Iter 1460 | Total Loss 160.443771
+
+Iter 1480 | Total Loss 176.081711
+
+Iter 1500 | Total Loss 166.419891
+
+Iter 1520 | Total Loss 79.765846
+
+Iter 1540 | Total Loss 249.963730
+
+Iter 1560 | Total Loss 153.963226
+
+Iter 1580 | Total Loss 113.164490
+
+Iter 1600 | Total Loss 192.760880
+
+Iter 1620 | Total Loss 149.137619
+
+Iter 1640 | Total Loss 167.700699
+
+Iter 1660 | Total Loss 190.929382
+
+Iter 1680 | Total Loss 174.314819
+
+Iter 1700 | Total Loss 243.043930
+
+Iter 1720 | Total Loss 143.558105
+
+Iter 1740 | Total Loss 182.598358
+
+Iter 1760 | Total Loss 188.096832
+
+Iter 1780 | Total Loss 356.430756
+
+Iter 1800 | Total Loss 89.633873
+
+Iter 1820 | Total Loss 95.711914
+
+Iter 1840 | Total Loss 119.841179
+
+Iter 1860 | Total Loss 317.399445
+
+Iter 1880 | Total Loss 165.076889
+
+Iter 1900 | Total Loss 224.003418
+
+Iter 1920 | Total Loss 122.056221
+
+Iter 1940 | Total Loss 718.797974
+
+Iter 1960 | Total Loss 97.035065
+
+Iter 1980 | Total Loss 156.735992
+
+Iter 2000 | Total Loss 161.706650
+
+Average time per iteration = 0.015353958487510682
