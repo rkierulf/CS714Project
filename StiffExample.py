@@ -1,0 +1,179 @@
+import os
+import argparse
+import time
+
+import imageio
+import numpy as np
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.nn import functional as F
+
+working_dir = "StiffODE_results"
+
+parser = argparse.ArgumentParser('Stiff Example')
+parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
+parser.add_argument('--data_size', type=int, default=1000)
+parser.add_argument('--batch_time', type=int, default=20)
+parser.add_argument('--batch_size', type=int, default=20)
+parser.add_argument('--niters', type=int, default=2000)
+parser.add_argument('--test_freq', type=int, default=20)
+parser.add_argument('--viz', action='store_true')
+parser.add_argument('--gpu', type=int, default=0)
+parser.add_argument('--adjoint', action='store_true')
+args = parser.parse_args()
+
+if args.adjoint:
+    from torchdiffeq import odeint_adjoint as odeint
+else:
+    from torchdiffeq import odeint
+
+device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
+
+true_y0 = torch.tensor([[1/3]]).to(device)
+t = torch.linspace(0., 0.5, args.data_size).to(device)
+
+
+class Lambda(nn.Module):
+
+    def forward(self, t, y):
+        return torch.tensor([-30 * y])
+
+
+with torch.no_grad():
+    true_y = odeint(Lambda(), true_y0, t, method='dopri5')
+
+
+def get_batch():
+    s = torch.from_numpy(np.random.choice(np.arange(args.data_size - args.batch_time, dtype=np.int64), args.batch_size, replace=False))
+    batch_y0 = true_y[s]  # (M, D)
+    batch_t = t[:args.batch_time]  # (T)
+    batch_y = torch.stack([true_y[s + i] for i in range(args.batch_time)], dim=0)  # (T, M, D)
+    return batch_y0.to(device), batch_t.to(device), batch_y.to(device)
+
+
+def makedirs(dirname):
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+
+
+
+makedirs(working_dir)
+import matplotlib.pyplot as plt
+
+
+def visualize(true_y, pred_y, odefunc, itr):
+
+    if True:
+        fig = plt.figure(figsize=(12, 4), facecolor='white')
+        ax_traj = fig.add_subplot(131, frameon=False)
+
+        ax_traj.cla()
+        ax_traj.set_title('dy/dt = -30t, y(0)=1/3')
+        ax_traj.set_xlabel('t')
+        ax_traj.set_ylabel('y')
+        ax_traj.plot(t.cpu().numpy(), true_y.cpu().numpy()[:, 0, 0], 'g-')
+        ax_traj.plot(t.cpu().numpy(), pred_y.cpu().numpy()[:, 0, 0], 'b--')
+        ax_traj.set_xlim(t.cpu().min(), t.cpu().max())
+        ax_traj.set_ylim(-1, 1)
+
+        fig.tight_layout()
+        plt.savefig(str(working_dir) + '/{:03d}'.format(itr))
+
+
+class ODEFunc(nn.Module):
+
+    def __init__(self, y_dim=1, n_hidden=64):
+        super(ODEFunc, self).__init__()
+
+        self.net = nn.Sequential(
+            nn.Linear(y_dim, n_hidden),
+            nn.ReLU(),
+            nn.Linear(n_hidden, y_dim),
+        )
+
+    def forward(self, t, y):
+        return self.net(y)
+
+
+class RunningAverageMeter(object):
+    """Computes and stores the average and current value"""
+
+    def __init__(self, momentum=0.99):
+        self.momentum = momentum
+        self.reset()
+
+    def reset(self):
+        self.val = None
+        self.avg = 0
+
+    def update(self, val):
+        if self.val is None:
+            self.avg = val
+        else:
+            self.avg = self.avg * self.momentum + val * (1 - self.momentum)
+        self.val = val
+
+
+if __name__ == '__main__':
+    scheme = 'euler'
+    if (os.path.exists(str(working_dir) + "/output.txt")):
+        os.remove(str(working_dir) + "/output.txt")
+    prog_out = open(str(working_dir) + "/output.txt", "a")
+    prog_out.write("Operating with " + str(scheme) + "\n")
+
+    ii = 0
+
+    func = ODEFunc().to(device)
+    
+    optimizer = optim.Adam(func.parameters(), lr=1e-3)
+    end = time.time()
+
+    time_meter = RunningAverageMeter(0.97)
+    
+    loss_meter = RunningAverageMeter(0.97)
+
+    loss_arr = []
+    time_arr = []
+
+    for itr in range(1, args.niters + 1):
+        start = time.time()
+        optimizer.zero_grad()
+        batch_y0, batch_t, batch_y = get_batch()
+        pred_y = odeint(func, batch_y0, batch_t, method=scheme).to(device)
+        loss = F.mse_loss(pred_y, batch_y)
+        loss.backward()
+        optimizer.step()
+        time_arr.append(time.time() - start)
+
+        time_meter.update(time.time() - end)
+        loss_meter.update(loss.item())
+
+        if itr % args.test_freq == 0:
+            with torch.no_grad():
+                pred_y = odeint(func, true_y0, t, method=scheme)
+                loss = torch.mean(torch.abs(pred_y - true_y))
+                loss_arr.append(loss.item())
+                prog_out.write('Iter {:04d} | Total Loss {:.6f}\n\n'.format(itr, loss.item()))
+                print('Iter {:04d} | Total Loss {:.6f}\n\n'.format(itr, loss.item()))
+                visualize(true_y, pred_y, func, ii)
+                ii += 1
+
+
+        end = time.time()
+    loss_arr = np.log(loss_arr)
+    plt.clf()
+    plt.figure(figsize=(5,5))
+    plt.plot(np.array(range(len(loss_arr))) * args.test_freq, loss_arr)
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("Loss During Training")
+    plt.savefig(str(working_dir) + '/loss.png')
+    prog_out.write("Average time per iteration = " + str(np.mean(np.array(time_arr))))
+    prog_out.close()
+    images = []
+    for val in range(len(os.listdir(working_dir)) - 2):
+        images.append(imageio.v2.imread(str(working_dir) + '/{:003d}.png'.format(val)))
+        print(val)
+    imageio.mimsave(str(os.getcwd()) + '/' + str(working_dir) + '/training_ ' + str(scheme) + '.gif', images, format='GIF')
