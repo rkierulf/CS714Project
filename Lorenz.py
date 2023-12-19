@@ -10,7 +10,7 @@ from torch.nn import functional as F
 
 import animator
 
-working_dir = "Lorenz_results/adjoint_dopri5"
+working_dir = "Lorenz_results/backprop_dopri5"
 
 parser = argparse.ArgumentParser('Lorenz System')
 parser.add_argument('--method', type=str, choices=['dopri5', 'adams'], default='dopri5')
@@ -24,7 +24,7 @@ parser.add_argument('--gpu', type=int, default=0)
 parser.add_argument('--adjoint', action='store_true')
 args = parser.parse_args()
 
-if True:
+if args.adjoint:
     from torchdiffeq import odeint_adjoint as odeint
 else:
     from torchdiffeq import odeint
