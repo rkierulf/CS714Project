@@ -1,0 +1,202 @@
+Operating with rk4
+Iter 0020 | Total Loss 0.035307
+
+Iter 0040 | Total Loss 0.021388
+
+Iter 0060 | Total Loss 0.059951
+
+Iter 0080 | Total Loss 0.402710
+
+Iter 0100 | Total Loss 0.055474
+
+Iter 0120 | Total Loss 0.031253
+
+Iter 0140 | Total Loss 0.055586
+
+Iter 0160 | Total Loss 0.033173
+
+Iter 0180 | Total Loss 0.721383
+
+Iter 0200 | Total Loss 1.358601
+
+Iter 0220 | Total Loss 0.032144
+
+Iter 0240 | Total Loss 0.329319
+
+Iter 0260 | Total Loss 0.306309
+
+Iter 0280 | Total Loss 0.264497
+
+Iter 0300 | Total Loss 0.013380
+
+Iter 0320 | Total Loss 0.061382
+
+Iter 0340 | Total Loss 0.023624
+
+Iter 0360 | Total Loss 0.009339
+
+Iter 0380 | Total Loss 0.046385
+
+Iter 0400 | Total Loss 0.009842
+
+Iter 0420 | Total Loss 0.002909
+
+Iter 0440 | Total Loss 0.001325
+
+Iter 0460 | Total Loss 0.002217
+
+Iter 0480 | Total Loss 0.001159
+
+Iter 0500 | Total Loss 0.003102
+
+Iter 0520 | Total Loss 0.001951
+
+Iter 0540 | Total Loss 0.005994
+
+Iter 0560 | Total Loss 0.004113
+
+Iter 0580 | Total Loss 0.000602
+
+Iter 0600 | Total Loss 0.000150
+
+Iter 0620 | Total Loss 0.000443
+
+Iter 0640 | Total Loss 0.027597
+
+Iter 0660 | Total Loss 0.043053
+
+Iter 0680 | Total Loss 0.002373
+
+Iter 0700 | Total Loss 0.057621
+
+Iter 0720 | Total Loss 0.000900
+
+Iter 0740 | Total Loss 0.000779
+
+Iter 0760 | Total Loss 0.001780
+
+Iter 0780 | Total Loss 0.000675
+
+Iter 0800 | Total Loss 0.000220
+
+Iter 0820 | Total Loss 0.000398
+
+Iter 0840 | Total Loss 0.000150
+
+Iter 0860 | Total Loss 0.000120
+
+Iter 0880 | Total Loss 0.000030
+
+Iter 0900 | Total Loss 0.000035
+
+Iter 0920 | Total Loss 0.000099
+
+Iter 0940 | Total Loss 0.000036
+
+Iter 0960 | Total Loss 0.000143
+
+Iter 0980 | Total Loss 0.000115
+
+Iter 1000 | Total Loss 0.000038
+
+Iter 1020 | Total Loss 0.000033
+
+Iter 1040 | Total Loss 0.000012
+
+Iter 1060 | Total Loss 0.000051
+
+Iter 1080 | Total Loss 0.000054
+
+Iter 1100 | Total Loss 0.000023
+
+Iter 1120 | Total Loss 0.000041
+
+Iter 1140 | Total Loss 0.000046
+
+Iter 1160 | Total Loss 0.000020
+
+Iter 1180 | Total Loss 0.000045
+
+Iter 1200 | Total Loss 0.000042
+
+Iter 1220 | Total Loss 0.000032
+
+Iter 1240 | Total Loss 0.000509
+
+Iter 1260 | Total Loss 0.001701
+
+Iter 1280 | Total Loss 0.000367
+
+Iter 1300 | Total Loss 0.001660
+
+Iter 1320 | Total Loss 0.000217
+
+Iter 1340 | Total Loss 0.000293
+
+Iter 1360 | Total Loss 0.000103
+
+Iter 1380 | Total Loss 0.000009
+
+Iter 1400 | Total Loss 0.000044
+
+Iter 1420 | Total Loss 0.000008
+
+Iter 1440 | Total Loss 0.000026
+
+Iter 1460 | Total Loss 0.000034
+
+Iter 1480 | Total Loss 0.000036
+
+Iter 1500 | Total Loss 0.000036
+
+Iter 1520 | Total Loss 0.000105
+
+Iter 1540 | Total Loss 0.000035
+
+Iter 1560 | Total Loss 0.000064
+
+Iter 1580 | Total Loss 0.000184
+
+Iter 1600 | Total Loss 0.000037
+
+Iter 1620 | Total Loss 0.000036
+
+Iter 1640 | Total Loss 0.000475
+
+Iter 1660 | Total Loss 0.002928
+
+Iter 1680 | Total Loss 0.000345
+
+Iter 1700 | Total Loss 0.010862
+
+Iter 1720 | Total Loss 0.001011
+
+Iter 1740 | Total Loss 0.004375
+
+Iter 1760 | Total Loss 0.008194
+
+Iter 1780 | Total Loss 0.000481
+
+Iter 1800 | Total Loss 0.002484
+
+Iter 1820 | Total Loss 0.000105
+
+Iter 1840 | Total Loss 0.000178
+
+Iter 1860 | Total Loss 0.000144
+
+Iter 1880 | Total Loss 0.000046
+
+Iter 1900 | Total Loss 0.000077
+
+Iter 1920 | Total Loss 0.000012
+
+Iter 1940 | Total Loss 0.000008
+
+Iter 1960 | Total Loss 0.000083
+
+Iter 1980 | Total Loss 0.000006
+
+Iter 2000 | Total Loss 0.000232
+
+Average time per iteration = 0.10226040971279145

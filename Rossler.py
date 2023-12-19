@@ -23,7 +23,7 @@ parser.add_argument('--gpu', type=int, default=0)
 parser.add_argument('--adjoint', action='store_true')
 args = parser.parse_args()
 
-working_dir = "Rossler_results/Rossler_Euler_Adjoint"
+working_dir = "Rossler_results/Rossler_RK4_Adjoint_2"
 def makedirs(dirname):
     if not os.path.exists(dirname):
         os.makedirs(dirname)
@@ -140,7 +140,7 @@ class RunningAverageMeter(object):
 if __name__ == '__main__':
 
     ii = 0
-    scheme = 'euler'
+    scheme = 'rk4'
     if (os.path.exists(str(working_dir) + "/output.txt")):
         os.remove(str(working_dir) + "/output.txt")
     prog_out = open(str(working_dir) + "/output.txt", "a")
